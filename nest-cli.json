@@ -1,0 +1,35 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "projects": {
+    "level": {
+      "type": "library",
+      "root": "libs/level",
+      "entryFile": "index",
+      "sourceRoot": "libs/level/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/level/tsconfig.lib.json"
+      }
+    },
+    "rest-utils": {
+      "type": "library",
+      "root": "libs/rest-utils",
+      "entryFile": "index",
+      "sourceRoot": "libs/rest-utils/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/rest-utils/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@nestjs/swagger",
+        "options": {
+          "introspectComments": true
+        }
+      }
+    ],
+    "webpack": true
+  }
+}

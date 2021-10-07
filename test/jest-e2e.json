@@ -1,0 +1,19 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@pr083/level/(.*)": "<rootDir>/../libs/level/src/$1",
+    "@pr083/level": "<rootDir>/../libs/level/src",
+    "@pr083/rest-utils/(.*)": "<rootDir>/../libs/rest-utils/src/$1",
+    "@pr083/rest-utils": "<rootDir>/../libs/rest-utils/src"
+  }
+}
