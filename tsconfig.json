@@ -42,6 +42,18 @@
       ],
       "@pr083/mail/*": [
         "libs/mail/src/*"
+      ],
+      "@pr083/auth": [
+        "libs/auth/src"
+      ],
+      "@pr083/auth/*": [
+        "libs/auth/src/*"
+      ],
+      "@pr083/config": [
+        "libs/config/src"
+      ],
+      "@pr083/config/*": [
+        "libs/config/src/*"
       ]
     }
   }

@@ -14,3 +14,8 @@ export class LimitOffset {
   })
   offset = 0;
 }
+
+export function ensure<T>(value: T | null | undefined): T {
+  if (!value) throw new Error('Value error: value is null or undefined');
+  return value;
+}

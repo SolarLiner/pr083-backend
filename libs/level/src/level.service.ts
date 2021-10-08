@@ -5,6 +5,7 @@ import {
   PublicLevel,
   TreeLevel,
 } from '@pr083/level/entities/level.entity';
+import { UserService } from '@pr083/user';
 import { plainToClass } from 'class-transformer';
 import * as slug from 'slug';
 import { ObjectLiteral, TreeRepository } from 'typeorm';
@@ -15,6 +16,7 @@ import { UpdateLevel } from './dto/update.level';
 export class LevelService {
   constructor(
     @InjectRepository(Level) private readonly $levels: TreeRepository<Level>,
+    private readonly $users: UserService,
   ) {}
 
   propertyMap(): ObjectLiteral {
@@ -61,6 +63,11 @@ export class LevelService {
     return plainToClass(Level, results);
   }
 
+  async exists(id: string): Promise<boolean> {
+    const count = await this.$levels.count({ where: { id } });
+    return count > 0;
+  }
+
   async findOne(id: string): Promise<Level | undefined> {
     const result = await this.$levels.findOne(id);
     return plainToClass(Level, result);
@@ -93,6 +100,10 @@ export class LevelService {
     const level = await this.findOne(id);
     if (level) return level.verifySolve(entry);
     return null;
+  }
+
+  async addSolve(levelId: string, userId: string): Promise<void> {
+    await this.$levels.update(levelId, { solvedBy: [{ id: userId }] });
   }
 }
 

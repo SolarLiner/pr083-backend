@@ -1,6 +1,6 @@
 {
   "name": "pr083",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Web API for the pr083 mini-game",
   "author": {
     "name": "CodeAnon",
@@ -26,8 +26,11 @@
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
+    "@nestjs/config": "^1.0.2",
     "@nestjs/core": "^8.0.0",
+    "@nestjs/jwt": "^8.0.0",
     "@nestjs/mapped-types": "*",
+    "@nestjs/passport": "^8.0.1",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.1.0",
     "@nestjs/typeorm": "^8.0.2",
@@ -35,6 +38,9 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "nodemailer": "^6.6.5",
+    "passport": "^0.5.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -52,6 +58,8 @@
     "@types/jest": "^27.0.1",
     "@types/node": "^16.0.0",
     "@types/nodemailer": "^6.4.4",
+    "@types/passport-jwt": "^3.0.6",
+    "@types/passport-local": "^1.0.34",
     "@types/slug": "^5.0.2",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
@@ -92,7 +100,9 @@
       "^@pr083/level(|/.*)$": "<rootDir>/libs/level/src/$1",
       "^@pr083/rest-utils(|/.*)$": "<rootDir>/libs/rest-utils/src/$1",
       "^@pr083/user(|/.*)$": "<rootDir>/libs/user/src/$1",
-      "^@pr083/mail(|/.*)$": "<rootDir>/libs/mail/src/$1"
+      "^@pr083/mail(|/.*)$": "<rootDir>/libs/mail/src/$1",
+      "^@pr083/auth(|/.*)$": "<rootDir>/libs/auth/src/$1",
+      "^@pr083/config(|/.*)$": "<rootDir>/libs/config/src/$1"
     }
   }
 }

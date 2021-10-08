@@ -16,6 +16,14 @@ async function bootstrap() {
       pj.license,
       `https://opensource.org/licenses/${pj.license.toUpperCase()}`,
     )
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'authorization',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config, {
     deepScanRoutes: true,

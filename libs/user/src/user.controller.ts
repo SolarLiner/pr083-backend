@@ -21,6 +21,7 @@ import {
   ApiNotFoundResponse,
   ApiBadRequestResponse,
   ApiForbiddenResponse,
+  ApiUnauthorizedResponse,
   ApiQuery,
   ApiTags,
   ApiNoContentResponse,
@@ -32,12 +33,13 @@ import { Roles } from './role.decorator';
 import { Role } from './role.enum';
 import { PublicUser } from './entities/user.entity';
 import { LimitOffset } from '@pr083/rest-utils';
-import { Login } from './dto/login';
+import { Login } from '@pr083/auth/dto/login';
+import { Authorize } from '@pr083/auth/authorize.decorator';
 
 @Controller()
 @ApiTags('users')
 @ApiBadRequestResponse({ description: 'Request data validation failed' })
-@ApiBadRequestResponse({
+@ApiUnauthorizedResponse({
   description: 'User does not have required permissions',
 })
 export class UserController {
@@ -68,19 +70,20 @@ export class UserController {
   }
 
   @Get()
-  @ApiQuery({
-    name: 'inactive',
-    type: Boolean,
-    required: false,
-    description: 'Also include inactive users',
-  })
   @ApiOkResponse({ type: [PublicUser], description: 'Return all active users' })
-  async findAll(
-    @Query() { limit, offset }: LimitOffset,
-    @Query('inactive', new DefaultValuePipe('false'), ParseBoolPipe)
-    inactive = false,
-  ) {
-    const all = await this.$users.findAll(limit, offset, !inactive);
+  async findAll(@Query() { limit, offset }: LimitOffset) {
+    const all = await this.$users.findAll(limit, offset);
+    return all.map((u) => u.makePublic());
+  }
+
+  @Get('inactive')
+  @ApiOkResponse({
+    type: [PublicUser],
+    description: 'Return all active users, including inactive ones',
+  })
+  @Authorize(Role.ADMIN)
+  async findInactive(@Query() { limit, offset }: LimitOffset) {
+    const all = await this.$users.findAll(limit, offset, false);
     return all.map((u) => u.makePublic());
   }
 
@@ -111,7 +114,7 @@ export class UserController {
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN)
+  @Authorize(Role.ADMIN)
   @ApiNotFoundResponse({ description: 'No matching user found with this ID' })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUser) {
     const exists = await this.$users.exists(id);
@@ -121,26 +124,12 @@ export class UserController {
   }
 
   @Delete(':id')
-  @Roles(Role.ADMIN)
+  @Authorize(Role.ADMIN)
   @ApiNotFoundResponse({ description: 'No matching user found with this ID' })
   async remove(@Param('id') id: string) {
     const exists = await this.$users.exists(id);
     if (!exists) throw new NotFoundException();
 
     return this.$users.remove(id);
-  }
-
-  @Post('login')
-  @ApiOkResponse({
-    type: String,
-    description: 'Bearer token associated with the logged in user',
-  })
-  @ApiForbiddenResponse({ description: 'Username or password did not match' })
-  @HttpCode(200)
-  async login(@Body() { username, password }: Login) {
-    const user = await this.$users.login(username, password);
-    if (!user) throw new ForbiddenException();
-
-    return JSON.stringify('');
   }
 }

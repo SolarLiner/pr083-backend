@@ -18,6 +18,10 @@
     "@pr083/user/(.*)": "<rootDir>/../libs/user/src/$1",
     "@pr083/user": "<rootDir>/../libs/user/src",
     "@pr083/mail/(.*)": "<rootDir>/../libs/mail/src/$1",
-    "@pr083/mail": "<rootDir>/../libs/mail/src"
+    "@pr083/mail": "<rootDir>/../libs/mail/src",
+    "@pr083/auth/(.*)": "<rootDir>/../libs/auth/src/$1",
+    "@pr083/auth": "<rootDir>/../libs/auth/src",
+    "@pr083/config/(.*)": "<rootDir>/../libs/config/src/$1",
+    "@pr083/config": "<rootDir>/../libs/config/src"
   }
 }

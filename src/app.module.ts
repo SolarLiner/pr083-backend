@@ -4,6 +4,7 @@ import {
   Module,
   ValidationPipe,
 } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
@@ -132,6 +133,14 @@ class TypeOrmLogger implements ITypeOrmLogger {
         logging: ['query', 'error'],
         logger: new TypeOrmLogger(),
       }),
+    }),
+    ConfigModule.forRoot({
+      envFilePath: [
+        '.env',
+        '.env.local',
+        `.env.${process.env.NODE_ENV}`,
+        `.env.${process.env.NODE_ENV}.local`,
+      ],
     }),
     ApiModule,
   ],

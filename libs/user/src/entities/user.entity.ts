@@ -129,4 +129,5 @@ export class User {
 export class PublicUser extends OmitType(User, [
   'passwordHash',
   'emailVerified',
+  'solvedLevels',
 ]) {}

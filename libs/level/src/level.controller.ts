@@ -21,6 +21,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtPayload } from '@pr083/auth';
+import { Authorize } from '@pr083/auth/authorize.decorator';
 import { Solve } from '@pr083/level/dto/solve';
 import {
   PublicLevel,
@@ -28,6 +30,9 @@ import {
   TreeLevel,
 } from '@pr083/level/entities/level.entity';
 import { LimitOffset } from '@pr083/rest-utils';
+import { PublicUser } from '@pr083/user/entities/user.entity';
+import { Role } from '@pr083/user/role.enum';
+import { User } from '@pr083/user/user.decorator';
 import { CreateLevel } from './dto/create.level';
 import { UpdateLevel } from './dto/update.level';
 import { LevelService } from './level.service';
@@ -56,6 +61,7 @@ export class LevelController {
     description:
       "The server couldn't persist the Level record due to an unknown error",
   })
+  @Authorize(Role.ADMIN)
   async create(@Body() createLevel: CreateLevel) {
     const level = await this.$level.create(createLevel);
     if (level) return level.makePublic();
@@ -130,6 +136,7 @@ export class LevelController {
   @Patch(':id')
   @ApiOkResponse({ type: PublicLevel })
   @ApiNotFoundResponse()
+  @Authorize(Role.ADMIN)
   async update(
     @Body() updateLevel: UpdateLevel,
     @Param('id') id: string,
@@ -144,8 +151,18 @@ export class LevelController {
    * @param id Level ID of the record to remove
    */
   @Delete(':id')
+  @Authorize(Role.ADMIN)
+  @ApiOkResponse({
+    type: Boolean,
+    description:
+      'Removed the Level record with the matching ID, returning true if it existed',
+  })
   async remove(@Param('id') id: string) {
-    return await this.$level.remove(id);
+    if (await this.$level.exists(id)) {
+      await this.$level.remove(id);
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -160,9 +177,16 @@ export class LevelController {
     description: 'The level ID did not match any existing records',
   })
   @HttpCode(200)
-  async verifySolve(@Body() { levelId, entry }: Solve): Promise<boolean> {
+  @Authorize(Role.USER)
+  async verifySolve(
+    @Body() { levelId, entry }: Solve,
+    @User() { id: userId }: JwtPayload,
+  ): Promise<boolean> {
     const res = await this.$level.verifySolve(levelId, entry);
     if (res === null) throw new NotFoundException();
+    if (res) {
+      await this.$level.addSolve(levelId, userId);
+    }
     return res;
   }
 }
