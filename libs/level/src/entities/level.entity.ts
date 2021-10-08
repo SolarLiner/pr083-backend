@@ -1,7 +1,8 @@
 import { OmitType } from '@nestjs/swagger';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Point } from '@pr083/level/point.class';
-import { Type } from 'class-transformer';
+import { PublicUser, User } from '@pr083/user/entities/user.entity';
+import { Type, plainToClass } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -11,6 +12,7 @@ import {
   TreeChildren,
   TreeParent,
   UpdateDateColumn,
+  ManyToMany,
 } from 'typeorm';
 
 @Entity()
@@ -55,11 +57,38 @@ export class Level {
   @Type(() => Level)
   children!: Level[];
 
+  @ManyToMany(() => User, (u) => u.solvedLevels, { onDelete: 'RESTRICT' })
+  @ApiProperty({
+    type: () => [PublicUser],
+    description: 'Users having solved this level',
+  })
+  solvedBy!: PublicUser[];
+
   verifySolve(entry: string): boolean {
     // TODO: Actual algorithm
     return false;
   }
+
+  makePublic(): PublicLevel {
+    const { parent, children, ...level } = this;
+    return plainToClass(PublicLevel, level);
+  }
+
+  makeTree(): TreeLevel {
+    const { parent, children, ...level } = this;
+    return plainToClass(TreeLevel, {
+      ...level,
+      children: children.map((l) => l.makeTree()),
+    });
+  }
 }
 
-export class BaseLevel extends OmitType(Level, ["parent", "children"]) { }
-export class TreeLevel extends OmitType(Level, ["parent"]) { }
+export class PublicLevel extends OmitType(Level, ['parent', 'children']) {}
+
+export class TreeLevel extends PublicLevel {
+  @ApiProperty({
+    type: [TreeLevel],
+    description: 'The children levels of this level',
+  })
+  children!: TreeLevel[];
+}

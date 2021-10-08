@@ -14,6 +14,10 @@
     "@pr083/level/(.*)": "<rootDir>/../libs/level/src/$1",
     "@pr083/level": "<rootDir>/../libs/level/src",
     "@pr083/rest-utils/(.*)": "<rootDir>/../libs/rest-utils/src/$1",
-    "@pr083/rest-utils": "<rootDir>/../libs/rest-utils/src"
+    "@pr083/rest-utils": "<rootDir>/../libs/rest-utils/src",
+    "@pr083/user/(.*)": "<rootDir>/../libs/user/src/$1",
+    "@pr083/user": "<rootDir>/../libs/user/src",
+    "@pr083/mail/(.*)": "<rootDir>/../libs/mail/src/$1",
+    "@pr083/mail": "<rootDir>/../libs/mail/src"
   }
 }

@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Level } from '@pr083/level/entities/level.entity';
+import {
+  Level,
+  PublicLevel,
+  TreeLevel,
+} from '@pr083/level/entities/level.entity';
 import { plainToClass } from 'class-transformer';
 import * as slug from 'slug';
 import { ObjectLiteral, TreeRepository } from 'typeorm';
@@ -22,7 +26,7 @@ export class LevelService {
     oxygen,
     points,
     parent,
-  }: CreateLevel): Promise<boolean> {
+  }: CreateLevel): Promise<Level | null> {
     const level = this.$levels.create({
       name,
       slug: slug(name),
@@ -31,18 +35,17 @@ export class LevelService {
       parent: parent ? { slug: parent } : undefined,
     });
 
-    const result = await this.$levels.insert(level);
-    return result.identifiers.length > 0;
+    const res = await this.$levels.insert(level);
+    if (res.identifiers.length > 0) return level;
+    return null;
   }
 
   async findAll(limit = 10, offset = 0): Promise<Level[]> {
-    const results = await this.$levels.find({ skip: offset, take: limit });
-    return plainToClass(Level, results);
+    return this.$levels.find({ skip: offset, take: limit });
   }
 
-  async getTree(): Promise<Level | undefined> {
-    const rawTree = await this.$levels.findTrees().then(first);
-    return plainToClass(Level, rawTree);
+  async getTree(): Promise<Level> {
+    return this.$levels.findTrees().then(first);
   }
 
   async subtree(id: string): Promise<Level | null> {

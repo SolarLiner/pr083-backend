@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
-    "removeComments": true,
+    "removeComments": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
@@ -30,6 +30,18 @@
       ],
       "@pr083/rest-utils/*": [
         "libs/rest-utils/src/*"
+      ],
+      "@pr083/user": [
+        "libs/user/src"
+      ],
+      "@pr083/user/*": [
+        "libs/user/src/*"
+      ],
+      "@pr083/mail": [
+        "libs/mail/src"
+      ],
+      "@pr083/mail/*": [
+        "libs/mail/src/*"
       ]
     }
   }
