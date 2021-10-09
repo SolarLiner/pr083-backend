@@ -23,7 +23,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
     - run: pnpm i
     - run: pnpm build
     - name: Upload a Build Artifact
@@ -46,6 +45,5 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
     - run: pnpm i
     - run: pnpm test
