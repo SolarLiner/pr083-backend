@@ -15,6 +15,7 @@ import { plainToClass } from 'class-transformer';
 import { Authorize } from './authorize.decorator';
 import { Role } from '@pr083/user/role.enum';
 import { UserService } from '@pr083/user';
+import { CanRead } from './casl/abilities.decorator';
 
 class LoggedInUser extends PublicUser {
   token: string;
@@ -51,7 +52,7 @@ export class AuthController {
     type: PublicUser,
     description: 'Currently logged in user details',
   })
-  @Authorize(Role.USER)
+  @Authorize(CanRead(PublicUser))
   @HttpCode(200)
   async profile(@User() user: JwtPayload): Promise<PublicUser> {
     return this.$users.findById(user.id);

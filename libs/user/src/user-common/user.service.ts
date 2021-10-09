@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { MailService } from '@pr083/mail';
-import { UpdateUser } from './dto/update-user';
-import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Not, Repository } from 'typeorm';
-import { Role } from './role.enum';
-import { Any } from 'typeorm';
+import { MailService } from '@pr083/mail';
+import { IsNull, Repository } from 'typeorm';
+import { UpdateUser } from '../dto/update-user';
+import { User } from '../entities/user.entity';
+import { Role } from '../role.enum';
 
 @Injectable()
 export class UserService {

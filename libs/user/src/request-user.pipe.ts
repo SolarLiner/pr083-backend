@@ -1,13 +1,13 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
-import { User } from './entities/user.entity';
-import { RequestUserService } from './request-user/request-user.service';
+import { JwtPayload } from '@pr083/auth';
+import { PublicUser, User } from './entities/user.entity';
+import { getUserFromRequest } from './user-utils';
 
 @Injectable()
-export class RequestUserPipe implements PipeTransform<Express.Request, User | null> {
-  constructor(private readonly requestUser: RequestUserService) { }
-
-  transform(req: Express.Request): User | null {
-    return this.requestUser.get(req);
+export class RequestUserPipe
+  implements PipeTransform<Express.Request, PublicUser | JwtPayload | null>
+{
+  transform(req: Express.Request): PublicUser | JwtPayload | null {
+    return getUserFromRequest(req) ?? null;
   }
-
 }

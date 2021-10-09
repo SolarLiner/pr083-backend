@@ -1,40 +1,38 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
   BadRequestException,
-  Query,
-  ParseBoolPipe,
-  NotFoundException,
-  ForbiddenException,
-  InternalServerErrorException,
+  Body,
+  Controller,
+  Delete,
+  Get,
   HttpCode,
-  DefaultValuePipe,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import {
-  ApiOkResponse,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
   ApiBadRequestResponse,
-  ApiForbiddenResponse,
-  ApiUnauthorizedResponse,
-  ApiQuery,
-  ApiTags,
+  ApiCreatedResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { CreateUser } from './dto/create-user';
-import { UpdateUser } from './dto/update-user';
-import { Roles } from './role.decorator';
-import { Role } from './role.enum';
-import { PublicUser } from './entities/user.entity';
+import { Authorize, AuthorizeOptional } from '@pr083/auth/authorize.decorator';
+import {
+  CanCreate,
+  CanDelete,
+  CanRead,
+  CanUpdate,
+} from '@pr083/auth/casl/abilities.decorator';
 import { LimitOffset } from '@pr083/rest-utils';
-import { Login } from '@pr083/auth/dto/login';
-import { Authorize } from '@pr083/auth/authorize.decorator';
+import { CreateUser } from '../dto/create-user';
+import { UpdateUser } from '../dto/update-user';
+import { User, PublicUser } from '../entities/user.entity';
+import { UserService } from '../user-common/user.service';
 
 @Controller()
 @ApiTags('users')
@@ -51,6 +49,7 @@ export class UserController {
     description: 'Returns the newly created User object',
   })
   @ApiBadRequestResponse({ description: 'Passwords did not match' })
+  @Authorize(CanCreate(User))
   async create(@Body() newUser: CreateUser) {
     if (newUser.password1 !== newUser.password2) {
       throw new BadRequestException({
@@ -71,6 +70,7 @@ export class UserController {
 
   @Get()
   @ApiOkResponse({ type: [PublicUser], description: 'Return all active users' })
+  @AuthorizeOptional(CanRead(PublicUser))
   async findAll(@Query() { limit, offset }: LimitOffset) {
     const all = await this.$users.findAll(limit, offset);
     return all.map((u) => u.makePublic());
@@ -81,7 +81,7 @@ export class UserController {
     type: [PublicUser],
     description: 'Return all active users, including inactive ones',
   })
-  @Authorize(Role.ADMIN)
+  @Authorize(CanRead(User))
   async findInactive(@Query() { limit, offset }: LimitOffset) {
     const all = await this.$users.findAll(limit, offset, false);
     return all.map((u) => u.makePublic());
@@ -107,6 +107,7 @@ export class UserController {
     description: 'User matching the provided ID',
   })
   @ApiNotFoundResponse({ description: 'No matching user found with this ID' })
+  @AuthorizeOptional(CanRead(PublicUser))
   async findOne(@Param('id') id: string) {
     const user = await this.$users.findById(id);
     if (!user) throw new NotFoundException();
@@ -114,7 +115,7 @@ export class UserController {
   }
 
   @Patch(':id')
-  @Authorize(Role.ADMIN)
+  @Authorize(CanUpdate(PublicUser))
   @ApiNotFoundResponse({ description: 'No matching user found with this ID' })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUser) {
     const exists = await this.$users.exists(id);
@@ -124,7 +125,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @Authorize(Role.ADMIN)
+  @Authorize(CanDelete(PublicUser))
   @ApiNotFoundResponse({ description: 'No matching user found with this ID' })
   async remove(@Param('id') id: string) {
     const exists = await this.$users.exists(id);

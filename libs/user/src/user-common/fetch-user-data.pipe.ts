@@ -1,6 +1,6 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform } from '@nestjs/common';
 import { JwtPayload } from '@pr083/auth';
-import { PublicUser } from './entities/user.entity';
+import { PublicUser } from '../entities/user.entity';
 import { UserService } from './user.service';
 
 @Injectable()

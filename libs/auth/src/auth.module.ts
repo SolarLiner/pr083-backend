@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { ConfigModule } from '@nestjs/config';
 import config from '@pr083/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       inject: [config.jwt.KEY],
       useFactory: (config) => config,
     }),
+    CaslModule,
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],

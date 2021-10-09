@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@casl/ability': ^5.4.3
   '@nestjs/cli': ^8.0.0
   '@nestjs/common': ^8.0.0
   '@nestjs/config': ^1.0.2
@@ -51,6 +52,7 @@ specifiers:
   typescript: ^4.3.5
 
 dependencies:
+  '@casl/ability': 5.4.3
   '@nestjs/common': 8.0.10_91e265e1bcd1545143b1cccdf5c76cbc
   '@nestjs/config': 1.0.2_0edfcc6fd15379df979d034fa9d0bab2
   '@nestjs/core': 8.0.10_5e437384695596e048de6c168dfc5f83
@@ -505,6 +507,12 @@ packages:
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
+
+  /@casl/ability/5.4.3:
+    resolution: {integrity: sha512-X6U79udKkfS7459Y3DCkw58ZQno7BD9VJa5GnTL1rcKRACqERMVDs7qjVMW+JlLUZcT5DB2/GF5uvu0KsudEcA==}
+    dependencies:
+      '@ucast/mongo2js': 1.3.3
+    dev: false
 
   /@cspotcode/source-map-consumer/0.8.0:
     resolution: {integrity: sha512-41qniHzTU8yAGbCp04ohlmSrZf8bkf/iJsl3V0dRGsQN/5GFfx+LbCSsCpp2gqrqjTVg/K6O8ycoV35JIwAzAg==}
@@ -1435,6 +1443,30 @@ packages:
       '@typescript-eslint/types': 4.33.0
       eslint-visitor-keys: 2.1.0
     dev: true
+
+  /@ucast/core/1.10.1:
+    resolution: {integrity: sha512-sXKbvQiagjFh2JCpaHUa64P4UdJbOxYeC5xiZFn8y6iYdb0WkismduE+RmiJrIjw/eLDYmIEXiQeIYYowmkcAw==}
+    dev: false
+
+  /@ucast/js/3.0.2:
+    resolution: {integrity: sha512-zxNkdIPVvqJjHI7D/iK8Aai1+59yqU+N7bpHFodVmiTN7ukeNiGGpNmmSjQgsUw7eNcEBnPrZHNzp5UBxwmaPw==}
+    dependencies:
+      '@ucast/core': 1.10.1
+    dev: false
+
+  /@ucast/mongo/2.4.2:
+    resolution: {integrity: sha512-/zH1TdBJlYGKKD+Wh0oyD+aBvDSWrwHcD8b4tUL9UgHLhzHtkEnMVFuxbw3SRIRsAa01wmy06+LWt+WoZdj1Bw==}
+    dependencies:
+      '@ucast/core': 1.10.1
+    dev: false
+
+  /@ucast/mongo2js/1.3.3:
+    resolution: {integrity: sha512-sBPtMUYg+hRnYeVYKL+ATm8FaRPdlU9PijMhGYKgsPGjV9J4Ks41ytIjGayvKUnBOEhiCaKUUnY4qPeifdqATw==}
+    dependencies:
+      '@ucast/core': 1.10.1
+      '@ucast/js': 3.0.2
+      '@ucast/mongo': 2.4.2
+    dev: false
 
   /@webassemblyjs/ast/1.11.1:
     resolution: {integrity: sha512-ukBh14qFLjxTQNTXocdyksN5QdM28S1CxHt2rdskFyL+xFV7VremuBLVbmCePj+URalXBENx/9Lm7lnhihtCSw==}

@@ -23,6 +23,12 @@ import {
 } from '@nestjs/swagger';
 import { JwtPayload } from '@pr083/auth';
 import { Authorize } from '@pr083/auth/authorize.decorator';
+import {
+  CanCreate,
+  CanDelete,
+  CanRead,
+  CanUpdate,
+} from '@pr083/auth/casl/abilities.decorator';
 import { Solve } from '@pr083/level/dto/solve';
 import {
   PublicLevel,
@@ -61,7 +67,7 @@ export class LevelController {
     description:
       "The server couldn't persist the Level record due to an unknown error",
   })
-  @Authorize(Role.ADMIN)
+  @Authorize(CanCreate(Level))
   async create(@Body() createLevel: CreateLevel) {
     const level = await this.$level.create(createLevel);
     if (level) return level.makePublic();
@@ -107,6 +113,7 @@ export class LevelController {
   @ApiParam({ name: 'id', type: String, description: 'Level ID' })
   @ApiOkResponse({ type: TreeLevel, description: 'Realized subtree' })
   @ApiNotFoundResponse({ description: 'Subroot level was not found' })
+  @Authorize(CanRead(Level))
   async subtree(@Param('id') id: string): Promise<TreeLevel> {
     const result = await this.$level.subtree(id);
     if (!result) throw new NotFoundException();
@@ -122,6 +129,7 @@ export class LevelController {
   @Get(':id')
   @ApiOkResponse({ type: PublicLevel })
   @ApiNotFoundResponse()
+  @Authorize(CanRead(Level))
   async findOne(@Param('id') id: string): Promise<PublicLevel> {
     const result = await this.$level.findOne(id);
     if (result) return result.makePublic();
@@ -136,7 +144,7 @@ export class LevelController {
   @Patch(':id')
   @ApiOkResponse({ type: PublicLevel })
   @ApiNotFoundResponse()
-  @Authorize(Role.ADMIN)
+  @Authorize(CanUpdate(Level))
   async update(
     @Body() updateLevel: UpdateLevel,
     @Param('id') id: string,
@@ -151,7 +159,7 @@ export class LevelController {
    * @param id Level ID of the record to remove
    */
   @Delete(':id')
-  @Authorize(Role.ADMIN)
+  @Authorize(CanDelete(Level))
   @ApiOkResponse({
     type: Boolean,
     description:
@@ -177,7 +185,7 @@ export class LevelController {
     description: 'The level ID did not match any existing records',
   })
   @HttpCode(200)
-  @Authorize(Role.USER)
+  @Authorize(CanCreate(Solve))
   async verifySolve(
     @Body() { levelId, entry }: Solve,
     @User() { id: userId }: JwtPayload,

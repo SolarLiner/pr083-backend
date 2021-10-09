@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { AuthModule } from '@pr083/auth';
 import { LevelModule } from '@pr083/level';
-import { UserModule } from '@pr083/user';
+import { ApiUserModule } from '@pr083/user/api-user/api-user.module';
 
 @Module({
   imports: [
     LevelModule,
-    UserModule,
+    ApiUserModule,
     AuthModule,
     RouterModule.register([
       {
@@ -20,7 +20,7 @@ import { UserModule } from '@pr083/user';
       },
       {
         path: 'users',
-        module: UserModule,
+        module: ApiUserModule,
       },
     ]),
   ],
