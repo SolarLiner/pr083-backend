@@ -43,7 +43,7 @@ export class User {
     type: () => [PublicLevel],
     description: 'Levels solved by this user',
   })
-  solvedLevels!: PublicLevel[];
+  solvedLevels?: PublicLevel[];
 
   @Column({ type: 'jsonb' })
   @ApiProperty({

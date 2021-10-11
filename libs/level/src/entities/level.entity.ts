@@ -53,16 +53,17 @@ export class Level {
   parent?: Level;
 
   @TreeChildren()
-  @ApiProperty({ type: () => [Level] })
+  @ApiProperty({ type: () => [Level], required: false })
   @Type(() => Level)
-  children!: Level[];
+  children?: Level[];
 
   @ManyToMany(() => User, (u) => u.solvedLevels, { onDelete: 'RESTRICT' })
   @ApiProperty({
     type: () => [PublicUser],
+    required: false,
     description: 'Users having solved this level',
   })
-  solvedBy!: PublicUser[];
+  solvedBy?: PublicUser[];
 
   verifySolve(entry: string): boolean {
     // TODO: Actual algorithm
